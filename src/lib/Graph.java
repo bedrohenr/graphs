@@ -22,4 +22,23 @@ public class Graph<T>{
         }
         return null;
     }
+
+    public void addEdge(T source, T destination, float weight){
+        Vertex<T> vSource, vDestination;
+        Edge newEdge;
+
+        vSource = getVertex(source);
+
+        if(vSource == null)
+            vSource = addVertex(source);
+
+        vDestination = getVertex(destination);
+
+        if(vDestination == null)
+            vDestination = addVertex(destination);
+
+        newEdge = new Edge(vSource, vDestination, weight);
+
+        this.edges.add(newEdge);
+    }
 }
