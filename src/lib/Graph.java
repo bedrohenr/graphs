@@ -11,4 +11,15 @@ public class Graph<T>{
         this.vertices.add(novo);
         return novo;
     }    
+
+    private Vertex<T> getVertex(T value){
+        Vertex<T> v;
+        for(int i = 0; i < this.vertices.size(); i++){
+            v = this.vertices.get(i);
+
+            if(v.getValor().equals(value))
+                return v;
+        }
+        return null;
+    }
 }
