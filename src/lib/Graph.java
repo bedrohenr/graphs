@@ -41,4 +41,17 @@ public class Graph<T>{
 
         this.edges.add(newEdge);
     }
+
+    private ArrayList<Edge> getDestinations(Vertex v){
+        ArrayList<Edge> destinations = new ArrayList<>();
+        Edge current;
+
+        for(int i = 0; i < this.edges.size(); i++){
+            current = this.edges.get(i);
+            if(current.getSource().equals(v))
+                destinations.add(current);
+        }
+
+        return destinations;
+    }
 }
