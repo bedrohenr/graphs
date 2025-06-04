@@ -54,4 +54,28 @@ public class Graph<T>{
 
         return destinations;
     }
+
+    // Breadth-first search
+    public void bfs(){
+        ArrayList<Vertex> marked = new ArrayList<>();
+        ArrayList<Vertex> queue = new ArrayList<>();
+        Vertex current = this.vertices.get(0);
+
+        queue.add(current);
+        while(queue.size() > 0){
+            current = queue.get(0);
+            queue.remove(0);
+            marked.add(current);
+            System.out.println(current.getValor());
+
+            ArrayList<Edge> destinations = this.getDestinations(current);
+            Vertex next;
+
+            for(int i = 0; i < destinations.size(); i++){
+                next = destinations.get(i).getDestination();
+                if(!marked.contains(next) && !queue.contains(next))
+                    queue.add(next);
+            }
+        }
+    }
 }
