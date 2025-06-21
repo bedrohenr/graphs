@@ -3,8 +3,13 @@ package lib;
 import java.util.ArrayList;
 
 public class Graph<T>{
-    private ArrayList<Edge> edges;
-    private ArrayList<Vertex<T>> vertices;
+    protected ArrayList<Edge> edges;
+    protected ArrayList<Vertex<T>> vertices;
+
+    public Graph(){
+        this.edges = new ArrayList<>();
+        this.vertices = new ArrayList<>();
+    }
 
     private Vertex<T> addVertex(T value){
         Vertex<T> novo = new Vertex<T>(value);
@@ -12,7 +17,7 @@ public class Graph<T>{
         return novo;
     }    
 
-    private Vertex<T> getVertex(T value){
+    public Vertex<T> getVertex(T value){
         Vertex<T> v;
         for(int i = 0; i < this.vertices.size(); i++){
             v = this.vertices.get(i);
@@ -55,7 +60,7 @@ public class Graph<T>{
         return destinations;
     }
 
-    // Breadth-first search
+    // Breadth-first search ou Busca em largura
     public void bfs(){
         ArrayList<Vertex> marked = new ArrayList<>();
         ArrayList<Vertex> queue = new ArrayList<>();
@@ -78,4 +83,6 @@ public class Graph<T>{
             }
         }
     }
+
+
 }

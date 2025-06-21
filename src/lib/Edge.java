@@ -1,21 +1,20 @@
 package lib;
 
-public class Edge {
-   private Vertex source, destination;
+public class Edge<T> {
+   private Vertex<T> source, destination;
    private float weight;
 
-    public Edge(Vertex vSource, Vertex vDestination, float weight) {
+    public Edge(Vertex<T> vSource, Vertex<T> vDestination, float weight) {
         this.source = vSource;
         this.destination = vDestination;
-
         this.weight = weight;
     }
 
-    public Vertex getSource(){
+    public Vertex<T> getSource(){
         return this.source;
     }
 
-    public Vertex getDestination(){
+    public Vertex<T> getDestination(){
         return this.destination;
     }
 

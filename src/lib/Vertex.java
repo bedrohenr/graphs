@@ -1,9 +1,9 @@
 package lib;
 
 public class Vertex<T> {
-    private T value; 
+    protected T value; 
 
-    Vertex(T value){
+    protected Vertex(T value){
         this.value = value;
     }
 
