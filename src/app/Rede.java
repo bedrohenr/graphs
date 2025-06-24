@@ -1,6 +1,11 @@
 package app;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import lib.Graph;
+import lib.Vertex;
 
 // Importar as classes de dispositivos que você criou
 // package ...
@@ -47,6 +52,49 @@ public class Rede {
         redeGrafo.bfs(); // Seu BFS já imprime o valor do vértice (que agora é DispositivoRede)
     }
 
+
+    /**
+     * Djikstra.
+     */
+    public void simularCaminhoMinimo(Dispositivo startNodeValue, Dispositivo targetNodeValue){
+        // Executando Dijkstra a partir do nó
+        Map.Entry<HashMap<Vertex<Dispositivo>, Float>, HashMap<Vertex<Dispositivo>, Vertex<Dispositivo>>> result = 
+            redeGrafo.dijkstra(startNodeValue);
+
+        if (result != null) {
+            HashMap<Vertex<Dispositivo>, Float> distances = result.getKey();
+            HashMap<Vertex<Dispositivo>, Vertex<Dispositivo>> predecessors = result.getValue();
+
+            System.out.println("Menores distâncias a partir de '" + startNodeValue + "':");
+            for (Map.Entry<Vertex<Dispositivo>, Float> entry : distances.entrySet()) {
+                System.out.println("  " + entry.getKey().getValor() + ": " + entry.getValue());
+            }
+
+            // Reconstruindo o caminho para um nó específico, por exemplo, para 'G'
+            List<Vertex<Dispositivo>> pathToG = redeGrafo.reconstructPath(predecessors, startNodeValue, targetNodeValue);
+
+            System.out.println("\nCaminho mínimo de '" + startNodeValue + "' para '" + targetNodeValue + "':");
+            if (!pathToG.isEmpty()) {
+                for (int i = 0; i < pathToG.size(); i++) {
+                    System.out.print(pathToG.get(i).getValor());
+                    if (i < pathToG.size() - 1) {
+                        System.out.print(" -> ");
+                    }
+                }
+                System.out.println();
+            } else {
+                System.out.println("Nenhum caminho encontrado.");
+            }
+        }
+    }
+
+
+    /**
+     * Verificação de Ciclo.
+     */
+    public boolean temCiclo(){
+        return redeGrafo.hasCycle();
+    }
     // Você pode adicionar um método para buscar um dispositivo específico
     // se o seu Graph.getVertex() fosse público, ou se você adicionasse um
     // método similar na RedeDeComputadores.
