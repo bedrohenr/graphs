@@ -40,9 +40,11 @@ public abstract class Dispositivo {
 
     @Override
     public String toString() {
-        return "DispositivoRede:" +
-               "\tHostname='" + hostname + '\'' +
-               "\tIP='" + ipAddress + '\'' +
-               "\tTipo='" + tipo + '\'';
+        // return "DispositivoRede:" +
+        //        "\tHostname='" + hostname + '\'' +
+        //        "\tIP='" + ipAddress + '\'' +
+        //        "\tTipo='" + tipo + '\'';
+
+        return "Dispositivo: " + tipo + "," + hostname + ", " + ipAddress;
     }
 }

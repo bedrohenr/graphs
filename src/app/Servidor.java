@@ -21,10 +21,12 @@ public class Servidor extends Dispositivo {
 
     @Override
     public String toString() {
-        return "Servidor" + "\n" +
-               "\tHostname: '" + getHostname() + '\'' + "\n" +
-               "\tIP: '" + getIpAddress() + '\'' + "\n" +
-               "\tSO: '" + sistemaOperacional + '\'' + "\n" + 
-               "\tRAM: " + ramGB + " GB" + "\n"; 
+        // return "Servidor" + "\n" +
+        //        "\tHostname: '" + getHostname() + '\'' + "\n" +
+        //        "\tIP: '" + getIpAddress() + '\'' + "\n" +
+        //        "\tSO: '" + sistemaOperacional + '\'' + "\n" + 
+        //        "\tRAM: " + ramGB + " GB" + "\n"; 
+
+        return "[Server: " + sistemaOperacional + "" + ramGB + ", " + getHostname() + getIpAddress() + "]";
     }
 }

@@ -14,9 +14,11 @@ public class Workstation extends Dispositivo {
 
     @Override
     public String toString() {
-        return "Estacao de Trabalho" + "\n" +
-               "\tHostname: '" + getHostname() + '\'' + "\n" +
-               "\tIP: '" + getIpAddress() + '\'' + "\n" +
-               "\tUsuario: '" + usuarioPrincipal + '\'' + "\n";
+        // return "Estacao de Trabalho" + "\n" +
+        //        "\tHostname: '" + getHostname() + '\'' + "\n" +
+        //        "\tIP: '" + getIpAddress() + '\'' + "\n" +
+        //        "\tUsuario: '" + usuarioPrincipal + '\'' + "\n";
+
+        return "[Workstation: " + usuarioPrincipal + ", " + getHostname() + ", " + getIpAddress() + "]";
     }
 }

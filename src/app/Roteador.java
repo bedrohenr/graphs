@@ -14,9 +14,11 @@ public class Roteador extends Dispositivo {
 
     @Override
     public String toString() {
-        return "Roteador" + "\n" +
-               "\tHostname: '" + getHostname() + '\'' + "\n" +
-               "\tIP: '" + getIpAddress() + '\'' + "\n" +
-               "\tModelo: '" + modelo + '\'' + "\n";
+        // return "Roteador" + "\n" +
+        //        "\tHostname: '" + getHostname() + '\'' + "\n" +
+        //        "\tIP: '" + getIpAddress() + '\'' + "\n" +
+        //        "\tModelo: '" + modelo + '\'' + "\n";
+
+        return "[Router: " + modelo + ", " + getHostname() + ", " + getIpAddress() + "]";
     }
 }
