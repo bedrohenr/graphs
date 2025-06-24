@@ -56,6 +56,16 @@ public class Main {
         System.out.println("\nRede construída. Executando simulação de descoberta (BFS)...");
         minhaRede.simularDescobertaDeRedeBFS();
 
+        System.out.println();
+
+        System.out.println("-- Dikjstra: ");
+        minhaRede.simularCaminhoMinimo(roteadorTerciario, routerVPN);
+
+        System.out.println();
+
+        System.out.println("-- Verificação de ciclo: ");
+        System.out.print("A rede contém ciclo?: " + minhaRede.temCiclo());
+
         // O output do BFS agora mostrará a representação toString() dos seus objetos DispositivoRede
         // Ex: "Servidor{hostname='srv-web-01', ipAddress='192.168.1.10', SO='Linux', RAM=32GB}"
     }
