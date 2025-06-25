@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class Graph<T>{
-    protected ArrayList<Edge> edges;
+    public ArrayList<Edge> edges;
     protected ArrayList<Vertex<T>> vertices;
 
     public Graph(){
@@ -18,7 +18,7 @@ public class Graph<T>{
         this.vertices = new ArrayList<>();
     }
 
-    private Vertex<T> addVertex(T value){
+    public Vertex<T> addVertex(T value){
         Vertex<T> novo = new Vertex<T>(value);
         this.vertices.add(novo);
         return novo;
