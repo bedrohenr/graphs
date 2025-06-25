@@ -45,6 +45,6 @@ public abstract class Dispositivo {
         //        "\tIP='" + ipAddress + '\'' +
         //        "\tTipo='" + tipo + '\'';
 
-        return "Dispositivo: " + tipo + "," + hostname + ", " + ipAddress;
+        return "Dispositivo: " + ipAddress + ", " + tipo + ", " + hostname;
     }
 }
