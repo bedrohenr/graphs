@@ -70,20 +70,25 @@ public class Rede implements Cloneable {
         // Sua lógica atual do addEdge na classe Graph já trata isso: ele verifica se o vértice
         // com o 'value' (que agora é um objeto DispositivoRede) já existe e o adiciona se não.
 
-        // Teste de ciclo
-        Rede tempGraph = this.clone();
-        tempGraph.redeGrafo.addEdge(dispositivo1, dispositivo2, latenciaMs);
-
-        // Verificar se o grafo temporário agora contém um ciclo
-        if (tempGraph.redeGrafo.hasCycle()) { // Chama o método de verificação de ciclo
-            System.out.println("Erro: A conexão de '" + dispositivo1.getIpAddress() + "' para '" + dispositivo2.getIpAddress() + "' criaria um ciclo na rede. Conexão não adicionada.");
-        } else {
-            // Se não houver ciclo, adicione a aresta ao grafo real
-            // networkGraph.addEdge(source, destination, weight);
+        if(this.bidirecional){
             redeGrafo.addEdge(dispositivo1, dispositivo2, latenciaMs);
-            System.out.println("Conexão de '" + dispositivo1.getIpAddress() + "' para '" + dispositivo2.getIpAddress() + "' com peso adicionada com sucesso.");
-        }
+            redeGrafo.addEdge(dispositivo2, dispositivo1, latenciaMs);
+            System.out.println("Conexão bidirecional de '" + dispositivo1.getIpAddress() + "' para '" + dispositivo2.getIpAddress() + "' com peso "+ df.format(latenciaMs) +"ms adicionada com sucesso.");
+        } else {
+            // Teste de ciclo
+            Rede tempGraph = this.clone();
+            tempGraph.redeGrafo.addEdge(dispositivo1, dispositivo2, latenciaMs);
 
+            // Verificar se o grafo temporário agora contém um ciclo
+            if (tempGraph.redeGrafo.hasCycle()) { // Chama o método de verificação de ciclo
+                System.out.println("Erro: A conexão de '" + dispositivo1.getIpAddress() + "' para '" + dispositivo2.getIpAddress() + "' criaria um ciclo na rede. Conexão não adicionada.");
+            } else {
+                // Se não houver ciclo, adicione a aresta ao grafo real
+                // networkGraph.addEdge(source, destination, weight);
+                redeGrafo.addEdge(dispositivo1, dispositivo2, latenciaMs);
+                System.out.println("Conexão de '" + dispositivo1.getIpAddress() + "' para '" + dispositivo2.getIpAddress() + "' compeso "+ df.format(latenciaMs) +"ms adicionada com sucesso.");
+            }
+        }
     }
 
     public void adicionarDispositivo(Dispositivo disp){
