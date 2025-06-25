@@ -5,7 +5,7 @@ import app.Workstation;
 
 public class MainTestes {
     public static void main(String[] args) throws CloneNotSupportedException {
-        Rede minhaRede = new Rede();
+        Rede minhaRede = new Rede(true);
 
         // Dispositivos  
         Servidor servidorWeb = new Servidor("Servidor Web", "192.168.1.10", "Ubuntu Apache", 32);
@@ -48,10 +48,11 @@ public class MainTestes {
         // Conectando roteadores
         minhaRede.adicionarConexao(roteadorPrincipal, roteadorSecundario, 32.0f);
         minhaRede.adicionarConexao(roteadorSecundario, roteadorTerciario, 42.0f);
-        minhaRede.adicionarConexao(roteadorTerciario,roteadorPrincipal, 24.0f);
 
         // Conexão do roteador VPN
         minhaRede.adicionarConexao(routerVPN, servidorNuvem, 50.0f);
+
+        minhaRede.adicionarConexao(roteadorTerciario,roteadorPrincipal, 24.0f);
 
         System.out.println("\nRede construída. Executando simulação de descoberta (BFS)...");
         minhaRede.simularDescobertaDeRedeBFS();
@@ -65,5 +66,6 @@ public class MainTestes {
 
         System.out.println("-- Verificação de ciclo: ");
         System.out.print("A rede contém ciclo?: " + minhaRede.temCiclo());
+        System.out.println();
     }
 }
