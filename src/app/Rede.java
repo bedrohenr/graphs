@@ -1,5 +1,6 @@
 package app;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,20 +8,22 @@ import java.util.Map;
 import lib.Graph;
 import lib.Vertex;
 
-// Importar as classes de dispositivos que você criou
-// package ...
-// public abstract class DispositivoRede { ... }
-// public class Servidor extends DispositivoRede { ... }
-// public class EstacaoTrabalho extends DispositivoRede { ... }
-// public class Roteador extends DispositivoRede { ... }
-
-public class Rede {
+public class Rede implements Cloneable {
 
     // Agora o grafo é do tipo DispositivoRede
     private Graph<Dispositivo> redeGrafo;
+    private ArrayList<Dispositivo> dispositivos;
 
     public Rede() {
         this.redeGrafo = new Graph<Dispositivo>();
+        this.dispositivos = new ArrayList<>();
+    }
+
+    // Classe clonável para testar se adicionar uma conexão ocasionará em um ciclo
+    @Override
+    protected Rede clone() throws CloneNotSupportedException {
+        Rede cloned = (Rede) super.clone();
+        return cloned;
     }
 
     /**
@@ -31,24 +34,39 @@ public class Rede {
      * @param dispositivo1 Objeto DispositivoRede do primeiro dispositivo.
      * @param dispositivo2 Objeto DispositivoRede do segundo dispositivo.
      * @param latenciaMs Latência (peso) da conexão em milissegundos.
+     * @throws CloneNotSupportedException 
      */
-    public void adicionarConexao(Dispositivo dispositivo1, Dispositivo dispositivo2, float latenciaMs) {
+    public void adicionarConexao(Dispositivo dispositivo1, Dispositivo dispositivo2, float latenciaMs) throws CloneNotSupportedException {
         // Assegure-se de que os objetos DispositivoRede sejam os mesmos que já estão no grafo
         // ou que seus métodos equals/hashCode funcionem corretamente para que o getVertex/addVertex
         // da sua Graph identifique o vértice corretamente.
         // Sua lógica atual do addEdge na classe Graph já trata isso: ele verifica se o vértice
         // com o 'value' (que agora é um objeto DispositivoRede) já existe e o adiciona se não.
 
-        redeGrafo.addEdge(dispositivo1, dispositivo2, latenciaMs);
-        // Para conexões de rede bidirecionais (físicas), adicione a aresta no sentido inverso
-        redeGrafo.addEdge(dispositivo2, dispositivo1, latenciaMs);
+        // Teste de ciclo
+        Rede tempGraph = this.clone();
+        tempGraph.redeGrafo.addEdge(dispositivo1, dispositivo2, latenciaMs);
+
+        // Verificar se o grafo temporário agora contém um ciclo
+        if (tempGraph.redeGrafo.hasCycle()) { // Chama o método de verificação de ciclo
+            System.out.println("Erro: A conexão de '" + dispositivo1.getIpAddress() + "' para '" + dispositivo2.getIpAddress() + "' criaria um ciclo na rede. Conexão não adicionada.");
+        } else {
+            // Se não houver ciclo, adicione a aresta ao grafo real
+            // networkGraph.addEdge(source, destination, weight);
+            redeGrafo.addEdge(dispositivo1, dispositivo2, latenciaMs);
+            System.out.println("Conexão de '" + dispositivo1.getIpAddress() + "' para '" + dispositivo2.getIpAddress() + "' com peso adicionada com sucesso.");
+        }
+
+    }
+
+    public void adicionarDispositivo(Dispositivo disp){
+        dispositivos.add(disp);
     }
 
     /**
      * Realiza uma busca em largura na rede.
      */
     public void simularDescobertaDeRedeBFS() {
-        System.out.println("--- Simulação de Descoberta de Rede (BFS) ---");
         redeGrafo.bfs(); // Seu BFS já imprime o valor do vértice (que agora é DispositivoRede)
     }
 
@@ -95,16 +113,18 @@ public class Rede {
     public boolean temCiclo(){
         return redeGrafo.hasCycle();
     }
-    // Você pode adicionar um método para buscar um dispositivo específico
-    // se o seu Graph.getVertex() fosse público, ou se você adicionasse um
-    // método similar na RedeDeComputadores.
-    /*
-    public DispositivoRede buscarDispositivoPorIP(String ip) {
-        // Isso exigiria uma iteração sobre os vértices do grafo
-        // ou uma forma de obter um Vertex<DispositivoRede> e acessar seu valor.
-        // Sua `lib.Graph` não expõe diretamente os vértices, então precisaria de uma modificação lá
-        // para buscar por um atributo específico do DispositivoRede (como o IP).
-        return null;
+
+    public ArrayList<Dispositivo> listarDispositivos() {
+        return dispositivos;
     }
-    */
+
+    public Dispositivo getDispositivoByIP(String ip){
+        for (Dispositivo d : this.dispositivos) {
+            if (d.getIpAddress().equals(ip)) {
+                return d;
+            }
+        }
+        return null; // Not found
+    } 
+
 }
