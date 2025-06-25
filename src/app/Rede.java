@@ -13,10 +13,16 @@ public class Rede implements Cloneable {
     // Agora o grafo é do tipo DispositivoRede
     private Graph<Dispositivo> redeGrafo;
     private ArrayList<Dispositivo> dispositivos;
+    private boolean bidirecional;
 
-    public Rede() {
+    public Rede(boolean bidirecional) {
         this.redeGrafo = new Graph<Dispositivo>();
         this.dispositivos = new ArrayList<>();
+        this.bidirecional = bidirecional;
+    }
+
+    public boolean isBidirecional(){
+        return this.bidirecional;
     }
 
     // Classe clonável para testar se adicionar uma conexão ocasionará em um ciclo
