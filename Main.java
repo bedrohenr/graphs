@@ -54,7 +54,7 @@ public class Main {
         rede.adicionarConexao(roteadorTer, pcMarco, 23);
 
         rede.adicionarConexao(roteadorMain, roteadorSec, 35);
-        rede.adicionarConexao(roteadorTer, roteadorSec, 20);
+        rede.adicionarConexao( roteadorSec, roteadorTer,20);
         rede.adicionarConexao(roteadorTer, roteadorMain, 28);
 
         int opcao;
