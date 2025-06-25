@@ -22,8 +22,29 @@ public class Rede implements Cloneable {
     // Classe clonável para testar se adicionar uma conexão ocasionará em um ciclo
     @Override
     protected Rede clone() throws CloneNotSupportedException {
-        Rede cloned = (Rede) super.clone();
-        return cloned;
+        // Rede cloned = (Rede) super.clone();
+        // return cloned;
+        Rede clonedRede = (Rede) super.clone(); // Faz uma cópia rasa do objeto Rede
+
+        // **PASSO ESSENCIAL**: Crie uma NOVA instância de Graph e copie seu conteúdo
+        clonedRede.redeGrafo = new Graph<>(); // Ou chame redeGrafo.clone() se Graph.clone() for profundo
+        
+        // Copie os vértices para o novo grafo (pode ser a mesma referência se Dispositivo for imutável o suficiente,
+        // caso contrário, Dispositivo também precisaria ser clonado)
+        for (Dispositivo d : this.dispositivos) { // Assumindo 'dispositivos' é a lista de todos os dispositivos na Rede
+            clonedRede.redeGrafo.addVertex(d); // Adiciona o MESMO objeto Dispositivo (se for ok)
+        }
+
+        // Copie as arestas para o novo grafo
+        // IMPORTANTE: se Edge ou Vertex forem mutáveis, eles também precisariam ser clonados aqui
+        for (Edge<Dispositivo> edge : this.redeGrafo.edges) {
+            clonedRede.redeGrafo.addEdge(edge.getSource().getValor(), edge.getDestination().getValor(), edge.getWeight());
+        }
+
+        // Copie também a lista de dispositivos se for uma lista separada
+        clonedRede.dispositivos = new ArrayList<>(this.dispositivos); // Faz uma cópia rasa da lista, mas os Dispositivos são os mesmos
+
+        return clonedRede;
     }
 
     /**
