@@ -9,7 +9,7 @@ import app.Servidor;
 import app.Workstation;
 
 public class Main {
-    private static Rede rede = new Rede(true);
+    private static Rede rede = new Rede(false);
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws CloneNotSupportedException {
@@ -25,7 +25,7 @@ public class Main {
         Workstation pcLara = new Workstation("lara", "192.168.20.3", "lara");
 
         Roteador roteadorTer = new Roteador("tertiary", "192.168.40.1", "Cisco 2900");
-        Workstation pcMarco = new Workstation("dona", "192.168.40.2", "dona");
+        Workstation pcMarco = new Workstation("dona", "192.168.40.2", "marco");
         Workstation pcDona = new Workstation("dona", "192.168.40.3", "dona");
 
 
