@@ -27,6 +27,6 @@ public class Servidor extends Dispositivo {
         //        "\tSO: '" + sistemaOperacional + '\'' + "\n" + 
         //        "\tRAM: " + ramGB + " GB" + "\n"; 
 
-        return "[Server: " + sistemaOperacional + "" + ramGB + ", " + getHostname() + getIpAddress() + "]";
+        return "["+ getIpAddress() + " SV-" + getHostname()+"]";
     }
 }
