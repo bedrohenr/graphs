@@ -1,15 +1,18 @@
 package app;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lib.Edge;
 import lib.Graph;
 import lib.Vertex;
 
 public class Rede implements Cloneable {
 
+    private DecimalFormat df = new DecimalFormat("");
     // Agora o grafo é do tipo DispositivoRede
     private Graph<Dispositivo> redeGrafo;
     private ArrayList<Dispositivo> dispositivos;
@@ -102,7 +105,6 @@ public class Rede implements Cloneable {
         redeGrafo.bfs(); // Seu BFS já imprime o valor do vértice (que agora é DispositivoRede)
     }
 
-
     /**
      * Djikstra.
      */
@@ -150,6 +152,7 @@ public class Rede implements Cloneable {
         return dispositivos;
     }
 
+    // Busca o dispositivo pelo IP
     public Dispositivo getDispositivoByIP(String ip){
         for (Dispositivo d : this.dispositivos) {
             if (d.getIpAddress().equals(ip)) {
