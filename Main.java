@@ -9,10 +9,54 @@ import app.Servidor;
 import app.Workstation;
 
 public class Main {
-    private static Rede rede = new Rede();
+    private static Rede rede = new Rede(true);
     private static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
+
+        // Inserindo valores iniciais
+        Roteador roteadorMain = new Roteador("main", "192.168.0.1", "Cisco 2900");
+        Workstation pcJoao = new Workstation("joao", "192.168.0.2", "joaozin");
+        Workstation pcPedro = new Workstation("pedro", "192.168.0.3", "pp");
+        Workstation pcMaria = new Workstation("mari", "192.168.0.4", "amari");
+
+        Roteador roteadorSec = new Roteador("secondary", "192.168.20.1", "Cisco 2900");
+        Workstation pcAndre = new Workstation("andre", "192.168.20.2", "andre");
+        Workstation pcLara = new Workstation("lara", "192.168.20.3", "lara");
+
+        Roteador roteadorTer = new Roteador("tertiary", "192.168.40.1", "Cisco 2900");
+        Workstation pcMarco = new Workstation("dona", "192.168.40.2", "dona");
+        Workstation pcDona = new Workstation("dona", "192.168.40.3", "dona");
+
+
+        System.out.println("-- Conexões do Sistema Pré Criado --");
+        rede.adicionarDispositivo(roteadorMain);
+        rede.adicionarDispositivo(pcJoao);
+        rede.adicionarDispositivo(pcPedro);
+        rede.adicionarDispositivo(pcMaria);
+
+        rede.adicionarConexao(pcJoao, roteadorMain, 4);
+        rede.adicionarConexao(pcPedro, roteadorMain, 2);
+        rede.adicionarConexao(pcMaria, roteadorMain, 6);
+
+        rede.adicionarDispositivo(roteadorSec);
+        rede.adicionarDispositivo(pcAndre);
+        rede.adicionarDispositivo(pcLara);
+
+        rede.adicionarConexao(roteadorSec, pcLara, 4);
+        rede.adicionarConexao(roteadorSec, pcAndre, 9);
+
+
+        rede.adicionarDispositivo(roteadorTer);
+        rede.adicionarDispositivo(pcDona);
+        rede.adicionarDispositivo(pcMarco);
+        rede.adicionarConexao(roteadorTer, pcDona, 15);
+        rede.adicionarConexao(roteadorTer, pcMarco, 23);
+
+        rede.adicionarConexao(roteadorMain, roteadorSec, 35);
+        rede.adicionarConexao(roteadorTer, roteadorSec, 20);
+        rede.adicionarConexao(roteadorTer, roteadorMain, 28);
+
         int opcao;
         do {
             try {
@@ -51,7 +95,6 @@ public class Main {
                 opcao = -1; // Garante que o loop continue
             }
             System.out.println("\nPressione Enter para continuar...");
-            scanner.nextLine(); // Consome a nova linha pendente (do nextInt/nextFloat)
             scanner.nextLine(); // Espera pelo Enter
         } while (opcao != 0);
 
@@ -59,9 +102,18 @@ public class Main {
     }
 
     private static void exibirMenu() {
-        System.out.println("\n--- Menu de Simulação de Rede ---");
+        if(rede.isBidirecional()){
+            System.out.println("\n--- Menu de Simulação de Rede (Bidirecional) ---");
+        } else {
+            System.out.println("\n--- Menu de Simulação de Rede (Direcional) ---");
+        }
+
         System.out.println("1. Criar Dispositivo");
-        System.out.println("2. Criar Conexão entre Dispositivos (com verificação de ciclo)");
+        if(rede.isBidirecional()){
+            System.out.println("2. Criar Conexão Bidirecional entre Dispositivos (sem verificação de ciclo)");
+        } else {
+            System.out.println("2. Criar Conexão Direcional entre Dispositivos (com verificação de ciclo)");
+        }
         System.out.println("3. Encontrar Menor Caminho entre Dispositivos");
         System.out.println("4. Listar Dispositivos");
         System.out.println("5. Simular Descoberta de Rede (BFS)"); // Nome mais descritivo
@@ -74,7 +126,7 @@ public class Main {
     }
 
     private static void criarDispositivo() {
-        System.out.print("Digite o tipo do dispositivo:\n1 - Roteador\n2 - Servidor\n3 - PC: ");
+        System.out.print("Digite o tipo do dispositivo:\n1 - Roteador\n2 - Servidor\n3 - PC\nSua escolha: ");
         int tipo = -1;
         try {
             tipo = scanner.nextInt();
@@ -92,7 +144,7 @@ public class Main {
         // Loop para garantir IP único
         do {
             System.out.print("Digite o endereço IP (ex: 192.168.1.1): ");
-            ip = scanner.nextLine();
+            ip = scanner.nextLine().trim();
             if (rede.getDispositivoByIP(ip) != null) {
                 System.out.println("Erro: Já existe um dispositivo com este IP. Por favor, digite outro IP.");
             }
@@ -106,18 +158,8 @@ public class Main {
                 novoDisp = new Roteador(nome, ip, "Modelo Padrão");
                 break;
             case 2:
-                System.out.print("Digite o Sistema Operacional do servidor (ex: Ubuntu): ");
-                String os = scanner.nextLine();
-                System.out.print("Digite a RAM em GB do servidor: ");
-                int ramGB = -1;
-                try {
-                    ramGB = scanner.nextInt();
-                } catch (InputMismatchException e) {
-                    System.out.println("Erro: RAM deve ser um número inteiro.");
-                    scanner.nextLine(); // Limpa o buffer
-                    return;
-                }
-                scanner.nextLine(); // Consome o \n após nextInt()
+                String os = "Ubuntu";
+                int ramGB = 64;
                 novoDisp = new Servidor(nome, ip, os, ramGB);
                 break;
             case 3:
@@ -146,17 +188,20 @@ public class Main {
         System.out.print("Digite o endereço IP do dispositivo de origem: ");
         String sourceDispIP = scanner.next();
         Dispositivo sourceDisp = rede.getDispositivoByIP(sourceDispIP);
-        if (sourceDisp == null) {
-            System.out.println("Erro: Dispositivo de origem com IP '" + sourceDispIP + "' não encontrado.");
-            return;
+        while(sourceDisp == null){
+            System.out.print("\nErro: Dispositivo de origem com IP '" + sourceDispIP + "' não encontrado.\nTente novamente: ");
+            sourceDispIP = scanner.next();
+            sourceDisp = rede.getDispositivoByIP(sourceDispIP);
         }
 
         System.out.print("Digite o endereço IP do dispositivo de destino: ");
         String destinationDispIP = scanner.next();
         Dispositivo destinationDisp = rede.getDispositivoByIP(destinationDispIP);
-        if (destinationDisp == null) {
-            System.out.println("Erro: Dispositivo de destino com IP '" + destinationDispIP + "' não encontrado.");
-            return;
+
+        while(destinationDisp == null){
+            System.out.print("\nErro: Dispositivo de destino com IP '" + destinationDispIP + "' não encontrado.\nTente novamente: ");
+            destinationDispIP = scanner.next();
+            destinationDisp = rede.getDispositivoByIP(destinationDispIP);
         }
 
         if (sourceDisp.equals(destinationDisp)) {
@@ -164,15 +209,16 @@ public class Main {
             return;
         }
 
-        try {
-            System.out.print("Digite a latência (peso) dessa conexão: ");
-            float weight = scanner.nextFloat();
-            // scanner.nextLine(); // Consome o \n após nextFloat() se for usar nextLine depois
+        System.out.print("Digite a latência (peso) dessa conexão: ");
+        float weight = scanner.nextFloat();
 
+        while(weight < 0){
+            System.out.print("Peso da conexão não pode ser negativo, tente novamente: ");
+            weight = scanner.nextFloat();
+        }
+
+        try {
             rede.adicionarConexao(sourceDisp, destinationDisp, weight);
-        } catch (InputMismatchException e) {
-            System.out.println("Erro: Latência inválida. Por favor, digite um número.");
-            scanner.nextLine(); // Limpa a entrada inválida
         } catch (CloneNotSupportedException e) {
             System.out.println("Erro interno ao verificar ciclo: A operação de clonagem não é suportada. " + e.getMessage());
             // e.printStackTrace(); // Para depuração
@@ -190,17 +236,21 @@ public class Main {
         System.out.print("Digite o endereço IP do dispositivo de origem: ");
         String sourceDispIP = scanner.next();
         Dispositivo sourceDisp = rede.getDispositivoByIP(sourceDispIP);
-        if (sourceDisp == null) {
-            System.out.println("Erro: Dispositivo de origem com IP '" + sourceDispIP + "' não encontrado.");
-            return;
+
+        while(sourceDisp == null){
+            System.out.print("\nErro: Dispositivo de origem com IP '" + sourceDispIP + "' não encontrado.\nTente novamente: ");
+            sourceDispIP = scanner.next().trim();
+            sourceDisp = rede.getDispositivoByIP(sourceDispIP);
         }
 
         System.out.print("Digite o endereço IP do dispositivo de destino: ");
         String destinationDispIP = scanner.next();
         Dispositivo destinationDisp = rede.getDispositivoByIP(destinationDispIP);
-        if (destinationDisp == null) {
-            System.out.println("Erro: Dispositivo de destino com IP '" + destinationDispIP + "' não encontrado.");
-            return;
+
+        while(destinationDisp == null){
+            System.out.print("\nErro: Dispositivo de destino com IP '" + destinationDispIP + "' não encontrado.\nTente novamente: ");
+            destinationDispIP = scanner.next().trim();
+            destinationDisp = rede.getDispositivoByIP(destinationDispIP);
         }
 
         rede.simularCaminhoMinimo(sourceDisp, destinationDisp);
