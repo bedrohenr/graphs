@@ -14,6 +14,6 @@ public class Roteador extends Dispositivo {
 
     @Override
     public String toString() {
-        return "["+ getIpAddress() + " RT-" + getHostname() + "]";
+        return getIpAddress() + "\trt-" + getHostname();
     }
 }

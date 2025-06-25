@@ -19,6 +19,6 @@ public class Workstation extends Dispositivo {
         //        "\tIP: '" + getIpAddress() + '\'' + "\n" +
         //        "\tUsuario: '" + usuarioPrincipal + '\'' + "\n";
 
-        return "["+ getIpAddress() + "\tPC-"  + usuarioPrincipal + "]";
+        return getIpAddress() + "\tpc-"  + usuarioPrincipal;
     }
 }
